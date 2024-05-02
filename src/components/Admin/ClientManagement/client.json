@@ -1,0 +1,44 @@
+[
+  {
+    "title": "SR#",
+    "dataIndex": "srf",
+    "key": "srf",
+    "align": "center"
+  },
+  {
+    "title": "Client Name",
+    "dataIndex": "clientName",
+    "key": "clientName",
+    "align": "center"
+  },
+  {
+    "title": "Company Name",
+    "dataIndex": "companyName",
+    "key": "companyName",
+    "align": "center"
+  },
+  {
+    "title": "Created At",
+    "dataIndex": "createdAt",
+    "key": "createdAt",
+    "align": "center"
+  },
+  {
+    "title": "No of Briefs",
+    "dataIndex": "noOfBriefs",
+    "key": "noOfBriefs",
+    "align": "center"
+  },
+  {
+    "title": "No of Campaigns",
+    "dataIndex": "noOfCampaigns",
+    "key": "noOfCampaigns",
+    "align": "center"
+  },
+  {
+    "title": "Action",
+    "dataIndex": "action",
+    "key": "action",
+    "align": "center"
+  }
+]

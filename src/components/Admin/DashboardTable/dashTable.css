@@ -1,0 +1,52 @@
+/* General styles for the table within the custom-table class */
+
+.ant-table-thead > tr > th {
+  background-color: #f0f2f5; /* Adjust this color to match your header background color */
+  color: #595959; /* Adjust this color to match your header text color */
+  border-bottom: 2px solid #1890ff; /* Adjust this color to match the image */
+  border-top: 1px solid #1890ff;
+}
+
+/* All body cells have a bottom border */
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid #1890ff; /* Adjust this color to match the image */
+}
+
+/* Top border for the first row of body cells */
+.ant-table-tbody > tr:first-child > td {
+  border-top: 1px solid #1890ff; /* Adjust this color to match the image */
+}
+.ant-table-tbody {
+  border-top: 1px solid #1890ff; /* Adjust this color to match the image */
+}
+
+/* The first and last cells in each row have left and right borders respectively */
+.ant-table-tbody > tr > td:first-child,
+.ant-table-thead > tr > th:first-child {
+  border-left: 1px solid #1890ff; /* Adjust this color to match the image */
+}
+
+.custom-table .ant-table {
+  border-collapse: collapse; /* Ensures borders are collapsed */
+}
+
+/* Border around the table container */
+.custom-table .ant-table-bordered .ant-table-container {
+  border: 1px solid #1890ff; /* Specific border color */
+}
+
+/* Borders for individual cells */
+.custom-table .ant-table-cell {
+  border-right: 1px solid #1890ff; /* Right border for cells */
+}
+
+/* Border below each row */
+.custom-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #1890ff; /* Bottom border for table row cells */
+}
+
+/* Ensure the table container fits within its parent and enables scrolling if needed */
+.custom-table .ant-table-container {
+  max-width: 100%; /* Restrict maximum width to 100% of its parent */
+  overflow-x: auto; /* Allows horizontal scrolling */
+}
