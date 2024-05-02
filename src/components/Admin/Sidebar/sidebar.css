@@ -1,9 +1,0 @@
-/* This style will apply when the modal is not open */
-.css-1gk4rhx-MuiDrawer-docked .MuiDrawer-paper {
-  z-index: 1; /* Regular z-index */
-}
-
-/* This style will apply only when the modal is open */
-body.modal-open .css-1gk4rhx-MuiDrawer-docked .MuiDrawer-paper {
-  z-index: -1 !important; /* Lower z-index when modal is open */
-}

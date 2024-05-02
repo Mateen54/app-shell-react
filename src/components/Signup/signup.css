@@ -1,9 +1,0 @@
-:where(.css-dev-only-do-not-override-mzwlov).ant-form-vertical
-  .ant-form-item-label,
-:where(.css-dev-only-do-not-override-mzwlov).ant-col-24.ant-form-item-label,
-:where(.css-dev-only-do-not-override-mzwlov).ant-col-xl-24.ant-form-item-label {
-  padding: 0 0 0px;
-  margin: 0;
-  white-space: initial;
-  text-align: start;
-}
