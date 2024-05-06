@@ -530,7 +530,7 @@ const ClientManagement = () => {
               <span
                 style={{ fontSize: "16px", color: "#294799", fontWeight: 500 }}
               >
-                Result (12)
+                Result (11)
               </span>
             </Col>
             <Col>
