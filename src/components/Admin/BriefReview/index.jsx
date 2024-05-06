@@ -141,7 +141,7 @@ const BriefReview = () => {
 
   return (
     <>
-      <Sidebar>
+      <>
         <h1>Breif Review</h1>
         <div style={{ marginBottom: "30px" }} className="brief-review-tabs">
           <Tabs defaultActiveKey="1" className="custom-tabs">
@@ -154,7 +154,7 @@ const BriefReview = () => {
             </TabPane>
           </Tabs>
         </div>
-      </Sidebar>
+      </>
     </>
   );
 };

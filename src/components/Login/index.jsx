@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Input, Button, Spin } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import "./login.css"; // Ensure your CSS file is correctly linked
@@ -36,21 +36,6 @@ const formItemStyle = {
   justifyContent: "center", // Added for centering
 };
 
-const mainContainerStyle = {
-  width: "50%",
-  // height: "800px",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  // justifyContent: "center",
-  border: "1px solid #C8C4C4",
-  borderRadius: "24px",
-  backgroundColor: "#fff",
-  margin: "32px auto",
-  // marginTop: "112px",
-  // marginBottom: "112px",
-};
-
 const logoStyle = {
   width: "133px",
   height: "80px",
@@ -60,9 +45,20 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [isNewPassword, setIsNewPassword] = useState(false);
+
   const { user, isLoading, error } = useSelector((state) => state.signup);
 
   const onFinish = (values) => {
+    console.log("Received values of form: ", values);
+    dispatch(signupUser(values)).then(({ payload }) => {
+      if (payload) {
+        setIsNewPassword(true);
+      }
+    });
+  };
+
+  const onFinishPassword = (values) => {
     console.log("Received values of form: ", values);
     dispatch(signupUser(values)).then(({ payload }) => {
       if (payload) {
@@ -72,100 +68,135 @@ const Login = () => {
   };
 
   return (
-    <div className="mainContainer">
-      <img src="/images/app-logo.png" alt="Company Logo" style={logoStyle} />
-      {/* <h1 style={{ textAlign: "center" }}>SIGN UP</h1>  */}
-      <Form {...formItemLayout} requiredMark={false} onFinish={onFinish}>
-        <Form.Item
-          label="Full Name"
-          name="fullName"
-          rules={[{ required: true, message: "Please input your full name!" }]}
-          style={formItemStyle}
-        >
-          <Input style={inputStyle} />
-        </Form.Item>
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[
-            {
-              required: true,
-              type: "email",
-              message: "Please input your email!",
-            },
-          ]}
-          style={formItemStyle}
-        >
-          <Input style={inputStyle} />
-        </Form.Item>
-        <Form.Item
-          label="Phone Number"
-          name="phoneNumber"
-          rules={[
-            { required: true, message: "Please input your phone number!" },
-          ]}
-          style={formItemStyle}
-        >
-          <Input style={inputStyle} />
-        </Form.Item>
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[{ required: true, message: "Please input your password!" }]}
-          style={formItemStyle}
-        >
-          <Input.Password
-            style={inputStyle}
-            iconRender={(visible) =>
-              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-            }
-          />
-        </Form.Item>
-        <Form.Item
-          label="Confirm Password"
-          name="confirmPassword"
-          dependencies={["password"]}
-          rules={[
-            { required: true, message: "Please confirm your password!" },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
-                  return Promise.resolve();
+    <div className="centerWrapper">
+      <div className="mainContainer">
+        <img src="/images/app-logo.png" alt="Company Logo" style={logoStyle} />
+        {isNewPassword ? (
+          <Form
+            {...formItemLayout}
+            requiredMark={false}
+            onFinish={onFinishPassword}
+          >
+            <Form.Item
+              label="Old Password"
+              name="password"
+              rules={[
+                { required: true, message: "Please input your old  password!" },
+              ]}
+              style={formItemStyle}
+            >
+              <Input.Password
+                style={inputStyle}
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                 }
-                return Promise.reject(
-                  new Error("The two passwords that you entered do not match!")
-                );
-              },
-            }),
-          ]}
-          style={formItemStyle}
-        >
-          <Input.Password
-            style={inputStyle}
-            iconRender={(visible) =>
-              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-            }
-          />
-        </Form.Item>
-        <Form.Item
-          wrapperCol={{ ...formItemLayout.wrapperCol, offset: 0 }}
-          style={{ ...formItemStyle, width: "100%", marginTop: "24px" }} // Button takes the full width of its container
-        >
-          {isLoading ? (
-            <Spin />
-          ) : (
-            <Button type="primary" htmlType="submit" style={buttonStyle}>
-              Sign Up
-            </Button>
-          )}
-        </Form.Item>
-        <Form.Item wrapperCol={{ ...formItemLayout.wrapperCol, offset: 0 }}>
-          <div style={{ textAlign: "center" }}>
-            Already have an account? <a href="/login">Login</a>
-          </div>{" "}
-          {/* Centered login link */}
-        </Form.Item>
-      </Form>
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="New Password"
+              name="password"
+              rules={[
+                { required: true, message: "Please input your new password!" },
+              ]}
+              style={formItemStyle}
+            >
+              <Input.Password
+                style={inputStyle}
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Confirm Password"
+              name="password"
+              rules={[
+                { required: true, message: "Please confrim your password!" },
+              ]}
+              style={formItemStyle}
+            >
+              <Input.Password
+                style={inputStyle}
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+              />
+            </Form.Item>
+
+            <Form.Item
+              wrapperCol={{ ...formItemLayout.wrapperCol, offset: 0 }}
+              style={{ ...formItemStyle, width: "100%", marginTop: "24px" }} // Button takes the full width of its container
+            >
+              {isLoading ? (
+                <Spin />
+              ) : (
+                <Button type="primary" htmlType="submit" style={buttonStyle}>
+                  Create Password
+                </Button>
+              )}
+            </Form.Item>
+            <Form.Item wrapperCol={{ ...formItemLayout.wrapperCol, offset: 0 }}>
+              <div style={{ textAlign: "center" }}>
+                Already have an account? <a href="/login">Login</a>
+              </div>{" "}
+              {/* Centered login link */}
+            </Form.Item>
+          </Form>
+        ) : (
+          <Form {...formItemLayout} requiredMark={false} onFinish={onFinish}>
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  type: "email",
+                  message: "Please input your email!",
+                },
+              ]}
+              style={formItemStyle}
+            >
+              <Input style={inputStyle} />
+            </Form.Item>
+
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[
+                { required: true, message: "Please input your password!" },
+              ]}
+              style={formItemStyle}
+            >
+              <Input.Password
+                style={inputStyle}
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+              />
+            </Form.Item>
+
+            <Form.Item
+              wrapperCol={{ ...formItemLayout.wrapperCol, offset: 0 }}
+              style={{ ...formItemStyle, width: "100%", marginTop: "24px" }} // Button takes the full width of its container
+            >
+              {isLoading ? (
+                <Spin />
+              ) : (
+                <Button type="primary" htmlType="submit" style={buttonStyle}>
+                  Sign In
+                </Button>
+              )}
+            </Form.Item>
+            <Form.Item wrapperCol={{ ...formItemLayout.wrapperCol, offset: 0 }}>
+              <div style={{ textAlign: "center" }}>
+                Already have an account? <a href="/login">Login</a>
+              </div>{" "}
+            </Form.Item>
+          </Form>
+        )}
+      </div>
     </div>
   );
 };

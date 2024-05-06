@@ -1,0 +1,8 @@
+.custom-table .ant-table-thead > tr > th {
+  white-space: nowrap; /* Prevents text wrapping in headers */
+  font-size: 14px;
+}
+
+.custom-table .ant-table-tbody > tr > td {
+  font-size: 13px; /* Row data font size */
+}

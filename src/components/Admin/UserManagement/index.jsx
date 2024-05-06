@@ -152,7 +152,8 @@ const UserManagement = () => {
   ];
 
   function handleEdit(record) {
-    // Implement your edit logic here
+    setIsModalVisible(true);
+    document.body.classList.add("modal-open");
   }
 
   function handleDelete(record) {
@@ -386,10 +387,139 @@ const UserManagement = () => {
               </Button>
             </Form.Item>
           </Form>
+
+          <Form
+            form={form}
+            name="update_user"
+            onFinish={onFinish}
+            layout="vertical"
+          >
+            <Row gutter={24}>
+              <Col span={12}>
+                <Form.Item
+                  name="fullName"
+                  label="Full Name"
+                  rules={[
+                    { required: true, message: "Please input the full name!" },
+                  ]}
+                >
+                  <Input placeholder="John Doe" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="role"
+                  label="Role"
+                  rules={[
+                    { required: true, message: "Please select the role!" },
+                  ]}
+                >
+                  <Select placeholder="Select a role">
+                    <Option value="planner">Planner</Option>
+                    <Option value="designer">Designer</Option>
+                    <Option value="analyst">Analyst</Option>
+                    {/* Add other roles as needed */}
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={24}>
+              <Col span={12}>
+                <Form.Item
+                  name="status"
+                  label="Status"
+                  rules={[
+                    { required: true, message: "Please select the status!" },
+                  ]}
+                >
+                  <Select placeholder="Select a status">
+                    <Option value="active">Active</Option>
+                    <Option value="inactive">Inactive</Option>
+                    {/* Add other statuses as needed */}
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={24}>
+              <Col span={12}>
+                <Form.Item
+                  name="oldPassword"
+                  label="Old Password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your old password!",
+                    },
+                  ]}
+                >
+                  <Input.Password />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="newPassword"
+                  label="New Password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your new password!",
+                    },
+                    {
+                      min: 6,
+                      message: "Password must be at least 6 characters!",
+                    },
+                  ]}
+                >
+                  <Input.Password />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={24}>
+              <Col span={12}>
+                <Form.Item
+                  name="confirmNewPassword"
+                  label="Confirm New Password"
+                  dependencies={["newPassword"]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please confirm your new password!",
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue("newPassword") === value) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(
+                          new Error(
+                            "The two passwords that you entered do not match!"
+                          )
+                        );
+                      },
+                    }),
+                  ]}
+                >
+                  <Input.Password />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Form.Item>
+              <Button
+                style={{
+                  backgroundColor: "#294799",
+                  color: "white",
+                  marginTop: "10px",
+                }}
+                htmlType="submit"
+              >
+                Update User
+              </Button>
+            </Form.Item>
+          </Form>
         </div>
       </Modal>
 
-      <Sidebar>
+      <>
         <div>
           <Row>
             <Col>
@@ -458,7 +588,7 @@ const UserManagement = () => {
             pagination={paginationConfig}
           />
         </div>
-      </Sidebar>
+      </>
     </>
   );
 };

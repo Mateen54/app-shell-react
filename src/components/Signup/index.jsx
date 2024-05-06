@@ -125,6 +125,82 @@ const Signup = () => {
           {/* Centered login link */}
         </Form.Item>
       </Form>
+
+      <Form {...formItemLayout} requiredMark={false}>
+        <Form.Item
+          label="Old Password"
+          name="oldPassword"
+          rules={[
+            { required: true, message: "Please input your old password!" },
+          ]}
+          style={formItemStyle}
+        >
+          <Input.Password
+            style={inputStyle}
+            iconRender={(visible) =>
+              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+            }
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="New Password"
+          name="newPassword"
+          rules={[
+            { required: true, message: "Please input your new password!" },
+          ]}
+          style={formItemStyle}
+        >
+          <Input.Password
+            style={inputStyle}
+            iconRender={(visible) =>
+              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+            }
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="Confirm New Password"
+          name="confirmPassword"
+          dependencies={["newPassword"]}
+          rules={[
+            { required: true, message: "Please confirm your new password!" },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("newPassword") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  new Error("The two passwords that you entered do not match!")
+                );
+              },
+            }),
+          ]}
+          style={formItemStyle}
+        >
+          <Input.Password
+            style={inputStyle}
+            iconRender={(visible) =>
+              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+            }
+          />
+        </Form.Item>
+
+        <Form.Item
+          wrapperCol={{ ...formItemLayout.wrapperCol, offset: 0 }}
+          style={{ ...formItemStyle, width: "100%", marginTop: "24px" }} // Button takes the full width of its container
+        >
+          <Button type="primary" htmlType="submit" style={buttonStyle}>
+            Sign Up
+          </Button>
+        </Form.Item>
+        <Form.Item wrapperCol={{ ...formItemLayout.wrapperCol, offset: 0 }}>
+          <div style={{ textAlign: "center" }}>
+            Already have an account? <a href="/login">Login</a>
+          </div>{" "}
+          {/* Centered login link */}
+        </Form.Item>
+      </Form>
     </div>
   );
 };

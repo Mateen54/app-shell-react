@@ -8,18 +8,34 @@
   text-align: start;
 }
 /* Add this to your CSS file */
+
+.centerWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Use 100vh to make the wrapper take the full viewport height */
+  width: 100%; /* Ensures the wrapper takes the full width of the viewport */
+}
+
 .mainContainer {
-  width: 50%;
+  width: 100%;
+  max-width: 600px; /* Adjust max-width as needed */
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   border: 1px solid #c8c4c4;
   border-radius: 24px;
   background-color: #fff;
-  margin: 32px auto;
+  padding-right: 100px;
+  padding-left: 100px;
+  box-sizing: border-box;
 
   /* Media query for screen widths less than 768px */
   @media (max-width: 768px) {
-    width: 90%;
+    width: 100%;
+    padding-right: 0px;
+    padding-left: 0px;
+    border: none;
   }
 }

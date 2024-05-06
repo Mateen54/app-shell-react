@@ -8,7 +8,7 @@ import {
   Box,
 } from "@mui/material";
 
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, Outlet } from "react-router-dom";
 import "./sidebar.css";
 
 const drawerWidth = 245;
@@ -126,7 +126,7 @@ const Sidebar = ({ children }) => {
       </Drawer>
 
       <Box component="main" sx={{ flexGrow: 1, p: 2 }}>
-        {children}
+        <Outlet />
       </Box>
     </Box>
   );

@@ -491,7 +491,7 @@ const ClientManagement = () => {
         <div className="steps-content">{stepComponents[currentStep]}</div>
       </Modal>
 
-      <Sidebar>
+      <>
         <div>
           <Row>
             <Col>
@@ -573,7 +573,7 @@ const ClientManagement = () => {
             />
           )}
         </div>
-      </Sidebar>
+      </>
     </>
   );
 };

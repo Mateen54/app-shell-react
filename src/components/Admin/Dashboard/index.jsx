@@ -17,7 +17,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <Sidebar>
+    <>
       <Typography
         variant="h5"
         component="h5"
@@ -56,7 +56,7 @@ const Dashboard = () => {
       <Box sx={{ mt: 3 }}>
         <DashboardTable />
       </Box>
-    </Sidebar>
+    </>
   );
 };
 

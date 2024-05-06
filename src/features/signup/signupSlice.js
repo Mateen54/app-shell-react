@@ -16,7 +16,7 @@ export const signupUser = createAsyncThunk(
       const data = await response.json();
 
       // Store relevant data in localStorage
-      localStorage.setItem("user", JSON.stringify(data));
+      localStorage.setItem("authToken", JSON.stringify(data));
 
       if (!response.ok) {
         throw new Error("Signup failed!");
