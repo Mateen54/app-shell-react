@@ -88,6 +88,7 @@ const Sidebar = ({ children }) => {
             >
               <ListItemText primary={getCategoryForRoute(route)} />
             </ListItem>
+            //  sadasd
           ))}
         </List>
 

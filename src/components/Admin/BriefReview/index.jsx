@@ -10,6 +10,7 @@ const { Search } = Input;
 const { TabPane } = Tabs;
 
 // Define your data with 20 items
+// Define your data with 20 items
 const data = new Array(20).fill(null).map((_, index) => ({
   key: index,
   srf: index + 1,
