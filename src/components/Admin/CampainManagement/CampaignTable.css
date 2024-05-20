@@ -1,0 +1,61 @@
+.custom-pagination-ongoing .ant-table-tbody > tr > th,
+.custom-pagination-ongoing .ant-table-tbody > tr > td {
+  transition: background 0.2s, border-color 0.2s !important;
+  border-bottom: 1px solid #94a2f2 !important;
+  border-right: 1px solid #94a2f2;
+}
+
+.custom-pagination-ongoing .ant-table-tbody > tr > td {
+  transition: background 0.2s, border-color 0.2s !important;
+  border-bottom: 1px solid #94a2f2 !important;
+  border-right: 1px solid #94a2f2;
+  padding: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.custom-pagination-ongoing .ant-table-thead > tr > th,
+:where(.css-dev-only-do-not-override-mzwlov).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > td {
+  background: #f2f3ff !important;
+}
+.custom-pagination-ongoing .ant-table-thead > tr > th,
+:where(.css-dev-only-do-not-override-mzwlov).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > td {
+  background: #f2f3ff !important;
+  border-right: 1px solid #94a2f2 !important;
+  text-align: center !important;
+}
+
+.custom-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #294799 !important;
+}
+
+.tab-count {
+  background-color: #294799;
+  color: white;
+  border-radius: 12px;
+  padding: 0 6px;
+  margin-left: 4px;
+  font-size: 12px;
+  display: inline-block;
+  line-height: 1.5;
+}
+
+.custom-tabs .ant-tabs-tab:hover .tab-count {
+  background-color: #294799;
+  color: white;
+}
+
+.custom-tabs .ant-tabs-tab-active .tab-count {
+  background-color: #294799;
+  color: white;
+}
+.custom-tabs .ant-tabs-tab {
+  font-family: gothamBook;
+  color: #aaaaaa !important;
+}

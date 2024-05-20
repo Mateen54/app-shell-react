@@ -21,11 +21,11 @@ const Dashboard = () => {
       <Typography
         variant="h5"
         component="h5"
-        sx={{ color: "#294799", fontWeight: "500", mb: 4, mt: 5 }}
+        sx={{ color: "#294799", fontWeight: "500", mb: 4, mt: 5, px: 2 }}
       >
         Dashboard
       </Typography>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ px: 2 }}>
         {cards.map((card, index) => (
           <Grid item key={index} xs={12} md={2.4}>
             <Box
@@ -53,7 +53,7 @@ const Dashboard = () => {
           </Grid>
         ))}
       </Grid>
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ mt: 3, px: 2 }}>
         <DashboardTable />
       </Box>
     </>

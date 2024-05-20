@@ -7,37 +7,37 @@
 .ant-table-thead > tr > th {
   background-color: #f0f2f5; /* Adjust this color to match your header background color */
   color: #595959; /* Adjust this color to match your header text color */
-  border-bottom: 2px solid #1890ff; /* Adjust this color to match the image */
-  border-top: 1px solid #1890ff;
+  border-bottom: 2px solid #94a2f2; /* Adjust this color to match the image */
+  border-top: 1px solid #94a2f2;
 }
 
 /* All body cells have a bottom border */
 .ant-table-tbody > tr > td {
-  border-bottom: 1px solid #1890ff; /* Adjust this color to match the image */
+  border-bottom: 1px solid #94a2f2; /* Adjust this color to match the image */
 }
 
 /* The first and last cells in each row have left and right borders respectively */
 .ant-table-tbody > tr > td:first-child,
 .ant-table-thead > tr > th:first-child {
-  border-left: 1px solid #1890ff; /* Adjust this color to match the image */
+  border-left: 1px solid #94a2f2; /* Adjust this color to match the image */
 }
 
 .ant-table-tbody > tr > td:last-child,
 .ant-table-thead > tr > th:last-child {
-  border-right: 1px solid #1890ff; /* Adjust this color to match the image */
+  border-right: 1px solid #94a2f2; /* Adjust this color to match the image */
 }
 
 /* Top border for the first row of body cells */
 .ant-table-tbody > tr:first-child > td {
-  border-top: 1px solid #1890ff; /* Adjust this color to match the image */
+  border-top: 1px solid #94a2f2; /* Adjust this color to match the image */
 }
 .ant-table-tbody {
-  border-top: 1px solid #1890ff; /* Adjust this color to match the image */
+  border-top: 1px solid #94a2f2; /* Adjust this color to match the image */
 }
 
 /* Remove the last bottom border if you have a footer or pagination */
 .ant-table-tbody > tr:last-child > td {
-  border-bottom: 1px solid #1890ff;
+  border-bottom: 1px solid #94a2f2;
 }
 
 /* If you want to add a border around the whole table, uncomment this */
@@ -59,7 +59,7 @@
   > tr
   > td {
   transition: background 0.2s, border-color 0.2s;
-  border-bottom: 1px solid #1890ff;
+  border-bottom: 1px solid #94a2f2;
 }
 
 .brief-review-tabs .ant-tabs-card .ant-tabs-card-bar {
@@ -275,7 +275,7 @@
 .custom-search {
   width: 250px;
   height: 40px;
-  padding: 0 10px;
+  margin-right: 10px;
   border-right: none;
 }
 
@@ -287,4 +287,25 @@
 .badge-avatar {
   background-color: #1890ff; /* Your preferred color */
   /* Customize further if needed */
+}
+
+:where(.css-dev-only-do-not-override-mzwlov).ant-form-item
+  .ant-form-item-label
+  > label.ant-form-item-required:not(
+    .ant-form-item-required-mark-optional
+  )::before {
+  display: inline-block;
+  margin-inline-end: 4px;
+  color: #ff4d4f;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  display: none !important;
+}
+
+:where(.css-dev-only-do-not-override-mzwlov).ant-table-wrapper
+  .ant-table-tbody
+  .ant-table-row
+  > .ant-table-cell-row-hover {
+  background: #c6cbfd !important;
 }

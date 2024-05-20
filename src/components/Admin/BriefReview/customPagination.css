@@ -1,0 +1,18 @@
+.custom-pagination .ant-table-pagination.ant-pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.custom-pagination .ant-pagination-total-text {
+  margin-right: auto;
+}
+
+.custom-pagination .ant-table-pagination .ant-pagination-total-text {
+  margin-right: auto;
+  margin-top: -10px !important;
+}
+
+.custom-table-container {
+  overflow: auto;
+  height: calc(100vh - 200px); /* Adjust this value based on your layout */
+}

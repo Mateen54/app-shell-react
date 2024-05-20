@@ -7,3 +7,14 @@
 body.modal-open .css-1gk4rhx-MuiDrawer-docked .MuiDrawer-paper {
   z-index: -1 !important; /* Lower z-index when modal is open */
 }
+
+.css-10hburv-MuiTypography-root {
+  margin: 0;
+  font-family: "gothamMedium" !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  line-height: 1.5;
+  color: #3e3e3e;
+  letter-spacing: 0.00938em;
+  display: block;
+}

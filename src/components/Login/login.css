@@ -7,7 +7,13 @@
   white-space: initial;
   text-align: start;
 }
-/* Add this to your CSS file */
+:where(.css-dev-only-do-not-override-mzwlov).ant-form-item
+  .ant-form-item-label
+  > label {
+  font-weight: 500;
+  font-family: "gothamMedium";
+  color: "#3E3E3E";
+}
 
 .centerWrapper {
   display: flex;
@@ -30,7 +36,8 @@
   padding-right: 100px;
   padding-left: 100px;
   box-sizing: border-box;
-
+  padding-top: 50px !important;
+  padding-bottom: 50px !important;
   /* Media query for screen widths less than 768px */
   @media (max-width: 768px) {
     width: 100%;
@@ -38,4 +45,15 @@
     padding-left: 0px;
     border: none;
   }
+}
+.formLabel {
+  font-weight: bold;
+}
+
+:where(.css-dev-only-do-not-override-mzwlov).ant-form-item
+  .ant-form-item-label
+  > label {
+  font-weight: 500;
+  font-family: "gothamMedium";
+  color: #3e3e3e !important;
 }

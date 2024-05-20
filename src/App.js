@@ -1,27 +1,27 @@
-import * as React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Outlet,
-} from "react-router-dom";
-
-import RequireAuth from "./routeAuth/RequireAuth"; // This is not used in your code sample provided.
+import React, { Suspense } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Spin } from "antd";
+
+import RequireAuth from "./routeAuth/RequireAuth";
+import ProtectedRoute from "./routeAuth/ProtectedRoute"; // Ensure this matches the exact filename
 import Sidebar from "./components/Admin/Sidebar";
+import Dashboard from "./components/Admin/Dashboard";
+import Login from "./components/Login";
+import BriefReview from "./components/Admin/BriefReview";
+import Signup from "./components/Signup";
+import UserManagement from "./components/Admin/UserManagement";
+import ClientManagement from "./components/Admin/ClientManagement";
+import TestingB from "./components/TestingB";
+import BreifDetailByFile from "./components/Admin/BriefReview/BreifDetailByFile";
+import BreifDetailByForm from "./components/Admin/BriefReview/BreifDetailByForm";
+import Plan from "./components/Admin/Plan";
+import PlanReview from "./components/Admin/Plan/PlanReview";
+import POReview from "./components/Admin/Plan/POReview";
 
-const Dashboard = React.lazy(() => import("./components/Admin/Dashboard"));
-const Login = React.lazy(() => import("./components/Login"));
-const BriefReview = React.lazy(() => import("./components/Admin/BriefReview"));
-const Signup = React.lazy(() => import("./components/Signup"));
-const UserManagement = React.lazy(() =>
-  import("./components/Admin/UserManagement")
-);
-const ClientManagement = React.lazy(() =>
-  import("./components/Admin/ClientManagement")
-);
+import CampaignManagement from "./components/Admin/CampainManagement";
+import CampaignDetails from "./components/Admin/CampainManagement/CampaignDetails";
 
-const TestingB = React.lazy(() => import("./components/TestingB"));
+import ViewProfile from "./components/Admin/ClientManagement/ViewProfile";
 
 const CenteredLoader = () => (
   <div
@@ -38,75 +38,189 @@ const CenteredLoader = () => (
 
 const App = () => {
   return (
-    <>
-      <Router>
-        <Routes>
+    <Router>
+      <Routes>
+        <Route
+          index
+          element={
+            <Suspense fallback={<CenteredLoader />}>
+              <Login />
+            </Suspense>
+          }
+        />
+        <Route
+          path="signup"
+          element={
+            <Suspense fallback={<CenteredLoader />}>
+              <Signup />
+            </Suspense>
+          }
+        />
+        <Route
+          element={
+            <RequireAuth>
+              <ProtectedRoute allowedRoles={["planner", "editor", "admin"]}>
+                <Sidebar />
+              </ProtectedRoute>
+            </RequireAuth>
+          }
+        >
           <Route
-            index
+            path="dashboard"
             element={
-              <React.Suspense fallback={<CenteredLoader />}>
-                <Login />
-              </React.Suspense>
-            }
-          />
-
-          <Route
-            path="signup"
-            element={
-              <React.Suspense fallback={<CenteredLoader />}>
-                <Signup />
-              </React.Suspense>
-            }
-          />
-
-          <Route path="/" element={<Sidebar />}>
-            <Route
-              path="dashboard"
-              element={
-                <React.Suspense fallback={<CenteredLoader />}>
-                  <RequireAuth>
+              <Suspense fallback={<CenteredLoader />}>
+                <RequireAuth>
+                  <ProtectedRoute allowedRoles={["planner", "editor", "admin"]}>
                     <Dashboard />
-                  </RequireAuth>
-                </React.Suspense>
-              }
-            />
-            <Route
-              path="brief-review"
-              element={
-                <React.Suspense fallback={<CenteredLoader />}>
-                  <BriefReview />
-                </React.Suspense>
-              }
-            />
-            <Route
-              path="user-management"
-              element={
-                <React.Suspense fallback={<CenteredLoader />}>
-                  <UserManagement />
-                </React.Suspense>
-              }
-            />
-            <Route
-              path="client-management"
-              element={
-                <React.Suspense fallback={<CenteredLoader />}>
-                  <ClientManagement />
-                </React.Suspense>
-              }
-            />
+                  </ProtectedRoute>
+                </RequireAuth>
+              </Suspense>
+            }
+          />
+          <Route
+            path="brief-management"
+            element={
+              <Suspense fallback={<CenteredLoader />}>
+                <RequireAuth>
+                  <ProtectedRoute allowedRoles={["KMA", "editor", "admin"]}>
+                    <BriefReview />
+                  </ProtectedRoute>
+                </RequireAuth>
+              </Suspense>
+            }
+          />
+          <Route
+            path="campaign-management"
+            element={
+              <Suspense fallback={<CenteredLoader />}>
+                <RequireAuth>
+                  <ProtectedRoute allowedRoles={["KMA", "editor", "admin"]}>
+                    <CampaignManagement />
+                  </ProtectedRoute>
+                </RequireAuth>
+              </Suspense>
+            }
+          />
+          <Route
+            path="campaign-details"
+            element={
+              <Suspense fallback={<CenteredLoader />}>
+                <RequireAuth>
+                  <ProtectedRoute allowedRoles={["KMA", "editor", "admin"]}>
+                    <CampaignDetails />
+                  </ProtectedRoute>
+                </RequireAuth>
+              </Suspense>
+            }
+          />
+          <Route
+            path="brief-review-file"
+            element={
+              <Suspense fallback={<CenteredLoader />}>
+                <RequireAuth>
+                  <ProtectedRoute allowedRoles={["KMA", "editor", "admin"]}>
+                    <BreifDetailByFile />
+                  </ProtectedRoute>
+                </RequireAuth>
+              </Suspense>
+            }
+          />
+          <Route
+            path="brief-review-form"
+            element={
+              <Suspense fallback={<CenteredLoader />}>
+                <RequireAuth>
+                  <ProtectedRoute allowedRoles={["KMA", "editor", "admin"]}>
+                    <BreifDetailByForm />
+                  </ProtectedRoute>
+                </RequireAuth>
+              </Suspense>
+            }
+          />
+          <Route
+            path="user-management"
+            element={
+              <Suspense fallback={<CenteredLoader />}>
+                <RequireAuth>
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <UserManagement />
+                  </ProtectedRoute>
+                </RequireAuth>
+              </Suspense>
+            }
+          />
+          <Route
+            path="client-management"
+            element={
+              <Suspense fallback={<CenteredLoader />}>
+                <RequireAuth>
+                  <ProtectedRoute allowedRoles={["admin", "manager"]}>
+                    <ClientManagement />
+                  </ProtectedRoute>
+                </RequireAuth>
+              </Suspense>
+            }
+          />
+          <Route
+            path="view-client-profile"
+            element={
+              <Suspense fallback={<CenteredLoader />}>
+                <RequireAuth>
+                  <ProtectedRoute allowedRoles={["admin", "manager"]}>
+                    <ViewProfile />
+                  </ProtectedRoute>
+                </RequireAuth>
+              </Suspense>
+            }
+          />
 
-            <Route
-              path="testing"
-              element={
-                <React.Suspense fallback={<CenteredLoader />}>
-                  <TestingB />
-                </React.Suspense>
-              }
-            />
-          </Route>
-        </Routes>
-      </Router>
-    </>
+          <Route
+            path="plan"
+            element={
+              <Suspense fallback={<CenteredLoader />}>
+                <RequireAuth>
+                  <ProtectedRoute allowedRoles={["admin", "planner"]}>
+                    <Plan />
+                  </ProtectedRoute>
+                </RequireAuth>
+              </Suspense>
+            }
+          />
+          <Route
+            path="plan-review"
+            element={
+              <Suspense fallback={<CenteredLoader />}>
+                <RequireAuth>
+                  <ProtectedRoute allowedRoles={["admin", "planner"]}>
+                    <PlanReview />
+                  </ProtectedRoute>
+                </RequireAuth>
+              </Suspense>
+            }
+          />
+          <Route
+            path="plan-po-review"
+            element={
+              <Suspense fallback={<CenteredLoader />}>
+                <RequireAuth>
+                  <ProtectedRoute allowedRoles={["admin", "planner"]}>
+                    <POReview />
+                  </ProtectedRoute>
+                </RequireAuth>
+              </Suspense>
+            }
+          />
+          <Route
+            path="testing"
+            element={
+              <Suspense fallback={<CenteredLoader />}>
+                <TestingB />
+              </Suspense>
+            }
+          />
+        </Route>
+      </Routes>
+    </Router>
   );
 };
 

@@ -1,160 +1,109 @@
-import React from "react";
-import { Menu, Dropdown, Table, Input, Select, Row, Col, Tabs } from "antd";
-import Sidebar from "../Sidebar";
+import React, { useEffect, useState } from "react";
+import { Row, Col, Input, Tabs } from "antd";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPendingBrief } from "../../../features/fetchPendingBrief/fetchPendingBriefSlice";
+import { fetchAllBrief } from "../../../features/fetchApprovedBreif/fetchApprovedBriefSlice";
+import BriefTabs from "./BriefTabs";
 import "./table.css";
-import { DownOutlined } from "@ant-design/icons";
 
-const { Option } = Select;
 const { Search } = Input;
-
 const { TabPane } = Tabs;
 
-// Define your data with 20 items
-// Define your data with 20 items
-const data = new Array(20).fill(null).map((_, index) => ({
-  key: index,
-  srf: index + 1,
-  briefName: "Lorem Ipsum Condor",
-  date: "01/25/2014-01/24",
-  duration: "1 Year",
-  region: "Punjab",
-  city: "Lahore",
-  mediaType: "Billboard",
-  medium: "4",
-  action: <img src="/images/document-upload.png" />,
-}));
-
-// Define the columns for your table
-const columns = [
-  {
-    title: "SR#",
-    dataIndex: "srf",
-    key: "srf",
-  },
-  {
-    title: "Brief Name",
-    dataIndex: "briefName",
-    key: "briefName",
-  },
-  {
-    title: "Date",
-    dataIndex: "date",
-    key: "date",
-  },
-  {
-    title: "Duration",
-    dataIndex: "duration",
-    key: "duration",
-  },
-  {
-    title: "Region",
-    dataIndex: "region",
-    key: "region",
-  },
-  {
-    title: "City",
-    dataIndex: "city",
-    key: "city",
-  },
-  {
-    title: "Media Type",
-    dataIndex: "mediaType",
-    key: "mediaType",
-  },
-  {
-    title: "Medium",
-    dataIndex: "medium",
-    key: "medium",
-  },
-  {
-    title: "Action",
-    dataIndex: "action",
-    key: "action",
-    render: (text) => <a>{text}</a>,
-  },
-];
-
 const BriefReview = () => {
-  const paginationConfig = {
-    pageSize: 10, // Number of items per page
-    showSizeChanger: false, // Hide the size changer
-    showQuickJumper: false, // Hide the quick jumper
-    showTotal: (total, range) =>
-      `Showing ${range[0]} to ${range[1]} of ${total} entries`,
-  };
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const menu = (
-    <Menu>
-      <Menu.Item key="1">Copy</Menu.Item>
-      <Menu.Item key="2">CSV</Menu.Item>
-      <Menu.Item key="3">Excel</Menu.Item>
-      <Menu.Item key="4">PDF</Menu.Item>
-      <Menu.Item key="5">Print</Menu.Item>
-    </Menu>
-  );
+  const [activeTab, setActiveTab] = useState("1");
 
-  const ExportDropdown = () => (
-    <Dropdown overlay={menu} trigger={["click"]}>
-      <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-        Export <DownOutlined />
-      </a>
-    </Dropdown>
-  );
+  const res = useSelector((res) => res);
 
-  const NewBriefCmp = () => {
-    return (
-      <>
-        <Row style={{ marginBottom: "10px" }} justify="space-between">
-          <Col>
-            <Search placeholder="Lorem" enterButton style={{ width: 200 }} />
-          </Col>
-          <Row>
-            <Col>
-              <Select
-                defaultValue="region"
-                style={{ width: 120, marginRight: "12px" }}
-              >
-                <Option value="region">Region</Option>
-                {/* other options */}
-              </Select>
-            </Col>
-            <Col>
-              <Select defaultValue="export" style={{ width: 120 }}>
-                <Option value="copy">Copy</Option>
-                <Option value="csv">CSV</Option>
-                <Option value="excel">Excel</Option>
-                <Option value="pdf">PDF</Option>
-                <Option value="print">Print</Option>
-              </Select>
-            </Col>
-          </Row>
-        </Row>
-        <Table
-          className="custom-dashboard-table" // Assign the unique class here
-          columns={columns}
-          dataSource={data}
-          pagination={paginationConfig}
-        />
-      </>
-    );
-  };
+  const newBriefCount = res.pendingBreif.items?.briefs?.length || 0;
+  const approvedBriefCount = res.approvedBrief.items?.briefs?.length || 0;
+
+  console.log("sd", approvedBriefCount);
 
   return (
     <>
-      <>
-        <h1>Breif Review</h1>
-        <div style={{ marginBottom: "30px" }} className="brief-review-tabs">
-          <Tabs defaultActiveKey="1" className="custom-tabs">
-            <TabPane tab="New Brief" key="1">
-              <NewBriefCmp />
-            </TabPane>
-
-            <TabPane tab="Approved" key="3">
-              Content of Approved
-            </TabPane>
-          </Tabs>
-        </div>
-      </>
+      <h1
+        style={{
+          margin: "0px",
+          padding: "0px",
+          color: "#294799",
+          fontSize: "20px",
+          marginTop: "30px",
+          fontFamily: "gothamBook",
+          paddingLeft: "15px",
+          marginTop: "45px",
+        }}
+      >
+        Brief Management
+      </h1>
+      <hr
+        style={{
+          padding: "0px",
+          margin: "0px",
+          border: "none",
+          borderTop: "1px solid rgba(0, 0, 0, 0.12)",
+          marginTop: "10px",
+          boxShadow: "none",
+        }}
+      />
+      <Row
+        style={{
+          padding: "0",
+          margin: "0",
+          marginTop: "23px",
+          marginBottom: "0px",
+          fontFamily: "gothamMedium",
+          paddingLeft: "15px",
+          paddingRight: "10px",
+        }}
+        justify="space-between"
+        alignItems="center"
+      >
+        <Col>
+          <span
+            style={{
+              fontFamily: "gothamMedium",
+              fontSize: "16px",
+              color: "#294799",
+              fontWeight: 500,
+            }}
+          >
+            Result: ({activeTab === "1" ? approvedBriefCount : newBriefCount})
+          </span>
+        </Col>
+        <Col>
+          <Search
+            placeholder="Search"
+            onSearch={(value) => console.log(value)}
+            className="custom-search"
+          />
+        </Col>
+      </Row>
+      <div
+        style={{
+          marginBottom: "30px",
+          paddingLeft: "15px",
+          paddingRight: "15px",
+        }}
+        className="brief-review-tabs"
+      >
+        <Tabs
+          defaultActiveKey="1"
+          onChange={(key) => setActiveTab(key)}
+          style={{ fontFamily: "gothamBook" }}
+          className="custom-tabs"
+        >
+          <TabPane tab="New Brief" key="1">
+            <BriefTabs tab="new" navigate={navigate} dispatch={dispatch} />
+          </TabPane>
+          <TabPane tab="Approved" key="2">
+            <BriefTabs tab="approved" navigate={navigate} dispatch={dispatch} />
+          </TabPane>
+        </Tabs>
+      </div>
     </>
   );
 };

@@ -1,0 +1,23 @@
+/* Add this CSS to your application's stylesheet */
+.swal2-popup {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Custom font */
+  font-size: 16px; /* Larger font size */
+}
+
+.swal2-title {
+  color: #333; /* Custom color for the title */
+}
+
+.swal2-styled.swal2-confirm {
+  border: 0;
+  border-radius: 5px; /* Rounded corners for the confirm button */
+  background-color: #3085d6; /* Consistent with JavaScript settings */
+  color: white;
+}
+
+.swal2-styled.swal2-cancel {
+  border: 0;
+  border-radius: 5px;
+  background-color: #d33;
+  color: white;
+}

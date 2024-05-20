@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Menu,
-  Dropdown,
   Table,
   Input,
   Select,
@@ -15,21 +13,26 @@ import {
   Form,
   Avatar,
   Badge,
+  Spin,
+  message,
 } from "antd";
-import Sidebar from "../Sidebar";
+
 import "./UserManagement.css";
 import {
-  SearchOutlined,
-  DownOutlined,
-  RightOutlined,
   UserOutlined,
-  CameraOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
 } from "@ant-design/icons";
 
 import { useSelector, useDispatch } from "react-redux";
 
-import { clientMangement } from "../../../features/ClientReducer/clientManagementSlice";
+import { getUser } from "../../../features/getUserSlice";
+import { createUser } from "../../../features/createUserSlice";
+import { getRoles } from "../../../features/getRolesSlice";
+import { deleteUser } from "../../../features/deleteUserSlice";
+import EditUser from "./EditUser";
 
+import Alert from "../../../reuseComponent/Alert";
 const { Search } = Input;
 const { Option } = Select;
 
@@ -39,17 +42,76 @@ const UserManagement = () => {
   const [avatarSrc, setAvatarSrc] = useState(null);
   const [isPictureUploaded, setIsPictureUploaded] = useState(false);
   const [isVisible, setIsModalVisible] = useState(false);
-  const [formData, setFormData] = useState({});
 
-  // const { items, status, error } = useSelector(
-  //   (state) => state.clientMangement
-  // );
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [deletingUserId, setDeletingUserId] = useState(null);
+  const [form] = Form.useForm();
+  const [file, setFile] = useState(null);
+  const [editData, setEditData] = useState(null);
+  const [editClicked, setIsEditClicked] = useState(false);
+
+  const { items, status, error, loading } = useSelector(
+    (state) => state.getUser
+  );
+
+  const createUserRes = useSelector((state) => state.createUser);
+
+  const getRolesRes = useSelector((state) => state.getRoles);
+  const getUserRes = useSelector((state) => state.createUser);
+  const deleteUserRes = useSelector((state) => state.deleteUser);
+  const editUserRes = useSelector((state) => state.editUser);
+
+  const [localUsers, setLocalUsers] = useState(items.users);
 
   useEffect(() => {
-    dispatch(clientMangement());
+    if (createUserRes.error) {
+      message.error(createUserRes.error.response.data.message);
+    }
+  }, [createUserRes.error]); // Dependency array includes createClient.error to re-run the effect when it changes
+
+  useEffect(() => {
+    if (editUserRes.status === "succeeded") {
+      setIsModalVisible(false);
+    }
+  }, [editUserRes.status]); // Depend on editUserRes.status to react to its changes
+
+  useEffect(() => {
+    // Update local state when items.users changes
+    setLocalUsers(items.users);
+  }, [items.users]);
+
+  useEffect(() => {
+    if (deleteUserRes.status === "succeeded" && deletingUserId) {
+      // Remove the user from local state without another server call
+      const updatedUsers = localUsers.filter(
+        (user) => user.user_id !== deletingUserId
+      );
+      setLocalUsers(updatedUsers);
+    }
+  }, [deleteUserRes]);
+
+  useEffect(() => {
+    if (getUserRes.user) {
+      setAlertMessage("Please check Email");
+      setShowAlert(true);
+      setIsModalVisible(false);
+
+      form.resetFields();
+      setTimeout(() => {
+        dispatch(getUser());
+        dispatch(getRoles());
+      }, 4200);
+    }
+  }, [getUserRes.user]);
+
+  useEffect(() => {
+    dispatch(getUser());
+    dispatch(getRoles());
   }, [dispatch]);
 
   const showModal = () => {
+    setIsEditClicked(false);
     setIsModalVisible(true);
     document.body.classList.add("modal-open");
   };
@@ -76,69 +138,59 @@ const UserManagement = () => {
   const columns = [
     {
       title: "SR#",
-      dataIndex: "srf",
-      key: "srf",
-      align: "center",
+      dataIndex: "user_id",
+      key: "user_id",
     },
     {
       title: "Full Name",
       dataIndex: "fullName",
       key: "fullName",
-      align: "center",
     },
     {
       title: "Email Address",
       dataIndex: "emailAddress",
       key: "emailAddress",
-      align: "center",
     },
     {
-      title: "Phone Number",
-      dataIndex: "phoneNumber",
-      key: "phoneNumber",
-      align: "center",
-    },
-    {
-      title: "Role",
-      dataIndex: "role",
-      key: "role",
-      align: "center",
+      title: "Role Title",
+      dataIndex: ["role", "role_title"],
+      key: "role_title",
     },
     {
       title: "Status",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
+      dataIndex: "isActive",
+      key: "isActive",
+      render: (text) => {
+        return text === "Y" ? (
+          <span>
+            <CheckCircleOutlined style={{ color: "green", marginRight: 8 }} />
+            Active
+          </span>
+        ) : (
+          <span>
+            <CloseCircleOutlined style={{ color: "red", marginRight: 8 }} />
+            Inactive
+          </span>
+        );
+      },
     },
     {
       title: "Activity Tracker",
-      dataIndex: "activityTracker",
       key: "activityTracker",
       align: "center",
       render: (text, record) => (
-        <button
-          onClick={() => showCategoryData(record)}
-          style={{
-            textDecoration: "underline",
-            color: "#ffa500", // Adjust the color as needed
-            cursor: "pointer",
-            background: "none",
-            border: "none",
-            padding: "0",
-            // Any other styles you want to apply to the button
-          }}
-        >
-          View Activity
-        </button>
+        <div>
+          <a style={buttonStyles.delete} onClick={() => viewDetail(record)}>
+            View Detail
+          </a>
+        </div>
       ),
     },
     {
-      title: "Action",
-      dataIndex: "action",
+      title: "Actions",
       key: "action",
       align: "center",
       render: (text, record) => (
-        // Assuming you will have some components to render here
         <div>
           <a style={buttonStyles.edit} onClick={() => handleEdit(record)}>
             Edit
@@ -153,54 +205,24 @@ const UserManagement = () => {
 
   function handleEdit(record) {
     setIsModalVisible(true);
+    setEditData(record);
+    setIsEditClicked(true);
     document.body.classList.add("modal-open");
+
+    console.log(record);
   }
 
   function handleDelete(record) {
-    // Implement your delete logic here
+    console.log(record);
+    dispatch(deleteUser(record.user_id));
+    setDeletingUserId(record.user_id);
   }
 
   const showCategoryData = (record) => {
     console.log(record);
   };
 
-  const items = [
-    {
-      key: "1",
-      srf: "01",
-      fullName: "Lorem Ipsum Condor",
-      emailAddress: "example@gmail.com",
-      phoneNumber: "xxxx xxxx xxxx",
-      role: "Planner",
-      status: "Approved",
-      activityTracker: "View detail",
-      action: "",
-    },
-    {
-      key: "1",
-      srf: "01",
-      fullName: "Mateen",
-      emailAddress: "example@gmail.com",
-      phoneNumber: "xxxx xxxx xxxx",
-      role: "Planner",
-      status: "Approved",
-      activityTracker: "View detail",
-      action: "",
-    },
-    {
-      key: "1",
-      srf: "01",
-      fullName: "Ali",
-      emailAddress: "example@gmail.com",
-      phoneNumber: "xxxx xxxx xxxx",
-      role: "Planner",
-      status: "Approved",
-      activityTracker: "View detail",
-      action: "",
-    },
-  ];
-
-  const [form] = Form.useForm();
+  const viewDetail = (record) => {};
 
   const onFinish = (values) => {
     if (!isPictureUploaded) {
@@ -208,12 +230,31 @@ const UserManagement = () => {
       return;
     }
 
-    console.log("Received values of form: ", values);
-    console.log("Avatar Source: ", avatarSrc);
+    const formData = new FormData();
+
+    // Append the picture file
+    formData.append("profilePic", file);
+
+    // Append other form values
+    Object.keys(values).forEach((key) => {
+      if (key !== "profilePic") {
+        // Avoid appending the file input again
+        formData.append(key, values[key]);
+      }
+    });
+
+    console.log("FormData prepared for submission: ", formData);
+
+    dispatch(createUser(formData));
+  };
+
+  const handleRoleChange = (value, option) => {
+    const roleTitle = option.children;
   };
 
   const handleAvatarChange = (event) => {
     const file = event.target.files[0];
+    setFile(file);
     if (file) {
       const reader = new FileReader();
 
@@ -239,284 +280,186 @@ const UserManagement = () => {
 
   return (
     <>
+      {showAlert && (
+        <Alert
+          message={alertMessage}
+          type="success"
+          onClose={() => setShowAlert(false)}
+        />
+      )}
+
       <Modal
-        title="Create User"
         visible={isVisible}
         onCancel={onClose}
         footer={null}
         width={841}
         className="add-client-modal"
       >
-        <div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <input
-              type="file"
-              accept="image/*"
-              style={{ display: "none" }}
-              id="avatar-upload"
-              onChange={handleAvatarChange}
-            />
-            <label htmlFor="avatar-upload" style={{ cursor: "pointer" }}>
-              {" "}
-              {/* Makes the entire label clickable */}
-              <Badge
-                count={
-                  <img
-                    width="24px"
-                    height="24px"
-                    src="/images/camera.png"
-                    style={{
-                      color: "#FFFFFF",
-                      backgroundColor: "#294799",
-                      borderRadius: "50%",
-                      padding: "2px",
-                    }}
-                  />
-                }
-                offset={[-9, 60]} // Adjust as needed
-                style={{}} // White border effect
-              >
-                <Avatar
-                  size={74}
-                  icon={<UserOutlined />}
-                  src={avatarSrc} // The source of the Avatar image
-                  style={{ color: "#F2F3FF", backgroundColor: "#C6CBFDs" }}
-                />
-              </Badge>
-            </label>
-          </div>
-
-          {!isPictureUploaded && (
+        <h3 style={{ color: "#294799", fontSize: "20px" }}>
+          {editClicked ? "Edit User" : "Add User"}
+        </h3>
+        <Divider />
+        {editClicked ? (
+          <EditUser data={editData} />
+        ) : (
+          <div>
             <div
               style={{
                 display: "flex",
                 justifyContent: "center",
-                color: "red",
               }}
             >
-              <p>Please Upload Image</p>
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                id="avatar-upload"
+                onChange={handleAvatarChange}
+              />
+              <label htmlFor="avatar-upload" style={{ cursor: "pointer" }}>
+                {" "}
+                {/* Makes the entire label clickable */}
+                <Badge
+                  count={
+                    <img
+                      width="24px"
+                      height="24px"
+                      src="/images/camera.png"
+                      style={{
+                        color: "#FFFFFF",
+                        backgroundColor: "#294799",
+                        borderRadius: "50%",
+                        padding: "2px",
+                      }}
+                    />
+                  }
+                  offset={[-9, 60]} // Adjust as needed
+                  style={{}} // White border effect
+                >
+                  <Avatar
+                    size={74}
+                    icon={<UserOutlined />}
+                    src={avatarSrc} // The source of the Avatar image
+                    style={{ color: "#F2F3FF", backgroundColor: "#C6CBFDs" }}
+                  />
+                </Badge>
+              </label>
             </div>
-          )}
 
-          <Form
-            form={form}
-            name="create_user"
-            onFinish={onFinish}
-            layout="vertical"
-          >
-            <Row gutter={24}>
-              {" "}
-              {/* Add appropriate gutter size for spacing */}
-              <Col span={12}>
-                <Form.Item
-                  name="fullName"
-                  label="Full Name"
-                  rules={[
-                    { required: true, message: "Please input the full name!" },
-                  ]}
-                >
-                  <Input placeholder="John Doe" />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="email"
-                  label="Email"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input the email address!",
-                    },
-                    {
-                      type: "email",
-                      message: "Please enter a valid email address!",
-                    },
-                  ]}
-                >
-                  <Input placeholder="john@example.com" />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={12}>
-                <Form.Item
-                  name="phoneNumber"
-                  label="Phone Number"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input the phone number!",
-                    },
-                  ]}
-                >
-                  <Input placeholder="XXX XXXXXXXX" />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="role"
-                  label="Role"
-                  rules={[
-                    { required: true, message: "Please select the role!" },
-                  ]}
-                >
-                  <Select placeholder="e.g., Planner">
-                    <Option value="planner">Planner</Option>
-                    <Option value="designer">Designer</Option>
-                    <Option value="analyst">Analyst</Option>
-                    {/* Add other roles as needed */}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-            <Form.Item>
-              <Button
+            {!isPictureUploaded && (
+              <div
                 style={{
-                  backgroundColor: "#294799",
-                  color: "white",
-                  marginTop: "10px",
+                  display: "flex",
+                  justifyContent: "center",
+                  color: "red",
                 }}
-                htmlType="submit"
               >
-                Create User
-              </Button>
-            </Form.Item>
-          </Form>
+                <p>Please Upload Image</p>
+              </div>
+            )}
 
-          <Form
-            form={form}
-            name="update_user"
-            onFinish={onFinish}
-            layout="vertical"
-          >
-            <Row gutter={24}>
-              <Col span={12}>
-                <Form.Item
-                  name="fullName"
-                  label="Full Name"
-                  rules={[
-                    { required: true, message: "Please input the full name!" },
-                  ]}
-                >
-                  <Input placeholder="John Doe" />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="role"
-                  label="Role"
-                  rules={[
-                    { required: true, message: "Please select the role!" },
-                  ]}
-                >
-                  <Select placeholder="Select a role">
-                    <Option value="planner">Planner</Option>
-                    <Option value="designer">Designer</Option>
-                    <Option value="analyst">Analyst</Option>
-                    {/* Add other roles as needed */}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={12}>
-                <Form.Item
-                  name="status"
-                  label="Status"
-                  rules={[
-                    { required: true, message: "Please select the status!" },
-                  ]}
-                >
-                  <Select placeholder="Select a status">
-                    <Option value="active">Active</Option>
-                    <Option value="inactive">Inactive</Option>
-                    {/* Add other statuses as needed */}
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={12}>
-                <Form.Item
-                  name="oldPassword"
-                  label="Old Password"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input your old password!",
-                    },
-                  ]}
-                >
-                  <Input.Password />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="newPassword"
-                  label="New Password"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input your new password!",
-                    },
-                    {
-                      min: 6,
-                      message: "Password must be at least 6 characters!",
-                    },
-                  ]}
-                >
-                  <Input.Password />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={12}>
-                <Form.Item
-                  name="confirmNewPassword"
-                  label="Confirm New Password"
-                  dependencies={["newPassword"]}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please confirm your new password!",
-                    },
-                    ({ getFieldValue }) => ({
-                      validator(_, value) {
-                        if (!value || getFieldValue("newPassword") === value) {
-                          return Promise.resolve();
-                        }
-                        return Promise.reject(
-                          new Error(
-                            "The two passwords that you entered do not match!"
-                          )
-                        );
+            <Form
+              form={form}
+              name="create_user"
+              onFinish={onFinish}
+              layout="vertical"
+            >
+              <Row gutter={24}>
+                {" "}
+                {/* Add appropriate gutter size for spacing */}
+                <Col span={12}>
+                  <Form.Item
+                    name="fullName"
+                    label="Full Name"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input the full name!",
                       },
-                    }),
-                  ]}
+                      {
+                        pattern: /^[A-Za-z\s]*$/,
+                        message: "Please enter only letters and spaces",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="John Doe" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="emailAddress"
+                    label="email"
+                    rules={[
+                      {
+                        type: "email",
+                        required: true,
+                        message: "Please input the email address!",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="john@example.com" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={24}>
+                <Col span={12}>
+                  <Form.Item
+                    name="phoneNumber"
+                    label="Phone Number"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input phone number",
+                      },
+                      {
+                        pattern: /^[0-9]{6,}$/,
+                        message: "Enter enter minimum 6 digit number",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="XXX XXXXXXXX" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="role_id"
+                    label="Role"
+                    rules={[
+                      { required: true, message: "Please select the role!" },
+                    ]}
+                  >
+                    <Select
+                      placeholder="Select a role"
+                      onChange={handleRoleChange} // Set the onChange handler
+                      showSearch
+                      optionFilterProp="children"
+                    >
+                      {getRolesRes?.items.roles?.map((role) => (
+                        <Option key={role.role_id} value={role.role_id}>
+                          {role.role_title}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Form.Item>
+                <Button
+                  style={{
+                    backgroundColor: "#294799",
+                    color: "white",
+                    marginTop: "10px",
+                  }}
+                  htmlType="submit"
+                  disabled={getUserRes.isLoading}
+                  loading={getUserRes.isLoading}
                 >
-                  <Input.Password />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Form.Item>
-              <Button
-                style={{
-                  backgroundColor: "#294799",
-                  color: "white",
-                  marginTop: "10px",
-                }}
-                htmlType="submit"
-              >
-                Update User
-              </Button>
-            </Form.Item>
-          </Form>
-        </div>
+                  Create User
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
+        )}
       </Modal>
 
       <>
@@ -528,19 +471,25 @@ const UserManagement = () => {
                   margin: "0px",
                   padding: "0px",
                   color: "#294799",
-                  fontSize: "25px",
+                  fontSize: "20px",
                   marginTop: "30px",
+                  fontFamily: "gothamBook",
+                  paddingLeft: "20px",
+                  marginTop: "45px",
                 }}
               >
                 User Management
               </h1>
             </Col>
           </Row>
-          <Divider
+          <hr
             style={{
               padding: "0px",
               margin: "0px",
+              border: "none",
+              borderTop: "1px solid rgba(0, 0, 0, 0.12)",
               marginTop: "10px",
+              boxShadow: "none",
             }}
           />
 
@@ -548,17 +497,25 @@ const UserManagement = () => {
             style={{
               padding: "0",
               margin: "0",
-              marginTop: "15px",
-              marginBottom: "6px",
+              marginTop: "23px",
+              marginBottom: "0px",
+              fontFamily: "gothamMedium",
+              paddingLeft: "20px",
+              paddingRight: "10px",
             }}
             justify="space-between"
             alignItems="center"
           >
             <Col>
               <span
-                style={{ fontSize: "16px", color: "#294799", fontWeight: 500 }}
+                style={{
+                  fontFamily: "gothamMedium",
+                  fontSize: "16px",
+                  color: "#294799",
+                  fontWeight: 500,
+                }}
               >
-                Result (12)
+                Result ({localUsers?.length || 0})
               </span>
             </Col>
             <Col>
@@ -570,7 +527,7 @@ const UserManagement = () => {
                 Create User
               </Button>
               <Search
-                placeholder="input search text"
+                placeholder="search"
                 onSearch={(value) => console.log(value)}
                 className="custom-search"
               />
@@ -578,15 +535,28 @@ const UserManagement = () => {
           </Row>
         </div>
 
-        <Divider style={{ padding: "0", margin: "0", marginBottom: "20px" }} />
-
-        <div>
-          <Table
-            className="custom-dashboard-table" // Assign the unique class here
-            columns={columns}
-            dataSource={items}
-            pagination={paginationConfig}
-          />
+        <div style={{ padding: "15px" }}>
+          {loading ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "500px", // This height can be adjusted as needed
+              }}
+            >
+              <Spin size="large" />
+            </div>
+          ) : error ? (
+            <p>Error: {error}</p>
+          ) : (
+            <Table
+              className="custom-dashboard-table" // Assign the unique class here
+              columns={columns}
+              dataSource={localUsers}
+              pagination={paginationConfig}
+            />
+          )}
         </div>
       </>
     </>

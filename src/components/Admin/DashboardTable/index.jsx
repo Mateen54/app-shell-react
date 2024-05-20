@@ -139,19 +139,9 @@ const DashboardTable = () => {
   // Define a function to render action buttons
   const renderActionButtons = () => (
     <>
-      <div style={{ display: "flex" }}>
-        <Button
-          style={{
-            marginRight: "8px",
-            color: "#ffa940",
-            borderColor: "#ffa940",
-          }}
-        >
-          Site
-        </Button>
-        <Button style={{ color: "#ffa940", borderColor: "#ffa940" }}>
-          Tracking
-        </Button>
+      <div style={{ display: "flex", gap: 14 }}>
+        <p>View</p>
+        <p>Tracking</p>
       </div>
     </>
   );

@@ -1,39 +1,57 @@
 import React from "react";
-import {
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Box,
-} from "@mui/material";
-
-import { Link, useLocation, Outlet } from "react-router-dom";
+import { Drawer, List, ListItem, ListItemText, Box } from "@mui/material";
+import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
 import "./sidebar.css";
 
 const drawerWidth = 245;
 
 const routeCategoryMapping = {
   "/dashboard": "Dashboard",
-  "/brief-review": "Brief Review",
-  "/ongoing-campaign": "Ongoing Campaign",
-  "/previous-campaign": "Previous Campaign",
-  "/competitor-report": "Competitor Report",
-  "/lost-plan": "Lost Plan",
+  "/brief-management": "Brief Management",
+  "/campaign-management": "Campaign Management",
+  "/plan": "Plan",
   "/client-management": "Client Management",
   "/user-management": "User Management",
+  "/competitor-report": "Competitor Report",
 };
 
 const Sidebar = ({ children }) => {
   const location = useLocation();
-  console.log("Current Pathname:", location.pathname);
+  const navigate = useNavigate();
+  const userRole = localStorage.getItem("userRoles"); // Fetch user role from localStorage
+
   const getCategoryForRoute = (pathname) => {
     const route = Object.keys(routeCategoryMapping).find((key) =>
       pathname.startsWith(key)
     );
-    console.log("routeCategoryMapping[route]", pathname);
     return routeCategoryMapping[route];
   };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    navigate("/");
+    window.location.reload();
+  };
+
+  // Define routes accessible by each role
+  const roleBasedRoutes = {
+    admin: [
+      "/dashboard",
+      "/brief-management",
+      "/campaign-management",
+      "/plan",
+      "/client-management",
+      "/user-management",
+      "/competitor-report",
+    ],
+    planner: ["/dashboard", "/brief-review", "/plan"],
+    user: ["/dashboard", "/brief-review"],
+    // Add more roles as needed
+  };
+
+  // Get the routes allowed for the current user role
+  const accessibleRoutes = roleBasedRoutes[userRole] || [];
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -60,21 +78,12 @@ const Sidebar = ({ children }) => {
           <img
             src="/images/app-logo.png"
             alt="Company Logo"
-            style={{ width: "133px", height: "80px", marginTop: "20px" }}
+            style={{ width: "100px", height: "57px", marginTop: "10px" }}
           />
         </div>
 
-        <List sx={{ mt: 1, mx: 1, p: 0 }}>
-          {[
-            "/dashboard",
-            "/brief-review",
-            "/ongoing-campaign",
-            "/previous-campaign",
-            "/competitor-report",
-            "/lost-plan",
-            "/client-management",
-            "/user-management",
-          ].map((route) => (
+        <List sx={{ mt: 3, mx: 1, p: 0 }}>
+          {accessibleRoutes.map((route) => (
             <ListItem
               sx={{
                 backgroundColor: location.pathname.startsWith(route)
@@ -88,7 +97,6 @@ const Sidebar = ({ children }) => {
             >
               <ListItemText primary={getCategoryForRoute(route)} />
             </ListItem>
-            //  sadasd
           ))}
         </List>
 
@@ -102,30 +110,36 @@ const Sidebar = ({ children }) => {
             ml: 2,
           }}
         >
-          <ListItem key="Logout">
+          <ListItem button onClick={handleLogout} key="Logout">
             <img
               src="/images/logout.png"
-              alt="Company Logo"
-              style={{ width: "24px", height: "24px", marginRight: "8px" }}
+              alt="Logout Icon"
+              style={{
+                width: "20px",
+                height: "20px",
+                marginRight: "8px",
+                color: "red",
+              }}
             />
-            <ListItemText primary="Logout" />
+            <ListItemText style={{ color: "#3E3E3E" }} primary="Logout" />
           </ListItem>
+
           <Box sx={{ display: "flex" }}>
             <img
-              src="/images/notification.png"
-              alt="Company Logo"
-              style={{ width: "24px", height: "24px" }}
+              src="/images/setting.png"
+              alt="Settings Icon"
+              style={{ width: "20px", height: "20px" }}
             />
             <img
-              src="/images/setting.png"
-              alt="Company Logo"
-              style={{ width: "24px", height: "24px" }}
+              src="/images/notification.png"
+              alt="Notifications Icon"
+              style={{ width: "20px", height: "20px" }}
             />
           </Box>
         </List>
       </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p: 2 }}>
+      <Box component="main" sx={{ flexGrow: 1 }}>
         <Outlet />
       </Box>
     </Box>

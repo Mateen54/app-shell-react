@@ -1,113 +1,29 @@
 // src/productsSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+import axiosInstance from "../../httpService/httpService";
+
 export const clientMangement = createAsyncThunk(
   "clients/clientMangement",
-  async () => {
-    const response = await fetch("https://dummyjson.com/products");
-    const data = await response.json();
-    return [
-      {
-        key: "1",
-        srf: "01",
-        clientName: "Lorem Ipsum Condor",
-        companyName: "Lorem Ipsum Condor",
-        createdAt: "01/11/23",
-        noOfBriefs: 25,
-        noOfCampaigns: 25,
-        action: "View details",
-      },
-      {
-        key: "2",
-        srf: "02",
-        clientName: "Lorem Ipsum Condor",
-        companyName: "Lorem Ipsum Condor",
-        createdAt: "01/11/23",
-        noOfBriefs: 25,
-        noOfCampaigns: 25,
-        action: "View details",
-      },
-      {
-        key: "3",
-        srf: "03",
-        clientName: "Lorem Ipsum Condor",
-        companyName: "Lorem Ipsum Condor",
-        createdAt: "01/11/23",
-        noOfBriefs: 25,
-        noOfCampaigns: 25,
-        action: "View details",
-      },
-      {
-        key: "4",
-        srf: "04",
-        clientName: "Lorem Ipsum Condor",
-        companyName: "Lorem Ipsum Condor",
-        createdAt: "01/11/23",
-        noOfBriefs: 25,
-        noOfCampaigns: 25,
-        action: "View details",
-      },
-      {
-        key: "5",
-        srf: "05",
-        clientName: "Lorem Ipsum Condor",
-        companyName: "Lorem Ipsum Condor",
-        createdAt: "01/11/23",
-        noOfBriefs: 25,
-        noOfCampaigns: 25,
-        action: "View details",
-      },
-      {
-        key: "6",
-        srf: "06",
-        clientName: "Lorem Ipsum Condor",
-        companyName: "Lorem Ipsum Condor",
-        createdAt: "01/11/23",
-        noOfBriefs: 25,
-        noOfCampaigns: 25,
-        action: "View details",
-      },
-      {
-        key: "7",
-        srf: "07",
-        clientName: "Lorem Ipsum Condor",
-        companyName: "Lorem Ipsum Condor",
-        createdAt: "01/11/23",
-        noOfBriefs: 25,
-        noOfCampaigns: 25,
-        action: "View details",
-      },
-      {
-        key: "8",
-        srf: "08",
-        clientName: "Lorem Ipsum Condor",
-        companyName: "Lorem Ipsum Condor",
-        createdAt: "01/11/23",
-        noOfBriefs: 25,
-        noOfCampaigns: 25,
-        action: "View details",
-      },
-      {
-        key: "9",
-        srf: "09",
-        clientName: "Lorem Ipsum Condor",
-        companyName: "Lorem Ipsum Condor",
-        createdAt: "01/11/23",
-        noOfBriefs: 25,
-        noOfCampaigns: 25,
-        action: "View details",
-      },
-      {
-        key: "10",
-        srf: "10",
-        clientName: "Lorem Ipsum Condor",
-        companyName: "Lorem Ipsum Condor",
-        createdAt: "01/11/23",
-        noOfBriefs: 25,
-        noOfCampaigns: 25,
-        action: "View details",
-      },
-    ];
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await axiosInstance.get("/admin/fetch-all-clients", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.data || response.status !== 200) {
+        throw new Error("Failed to fetch clients");
+      }
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.message || "An error occurred while fetching clients"
+      );
+    }
   }
 );
 
