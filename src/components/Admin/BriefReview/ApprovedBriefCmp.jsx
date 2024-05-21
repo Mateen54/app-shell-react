@@ -103,10 +103,20 @@ const ApprovedBriefCmp = ({ navigate, dispatch }) => {
       console.log("File uploaded successfully", response.data);
       setPlainLoading(false);
       handleOk();
+      setFile(null);
       setTimeout(() => {
-        message.success("Plain Attached successfully!");
+        message.success("Plan Attached successfully!");
       }, 500);
     } catch (error) {
+      setPlainLoading(false);
+      console.log("error", error.response);
+
+      message.error(
+        "you can only attach plan to an approved brief or plan is already attach"
+      );
+      setFile(null);
+      setIsModalVisible(false);
+
       console.error("Error uploading file", error);
     }
   };
@@ -152,15 +162,15 @@ const ApprovedBriefCmp = ({ navigate, dispatch }) => {
             margin: "0",
           }}
         >
-          Add Plain
+          Add Plan
         </h2>
 
         <p>
           {selectedRecord && (
             <>
-              Attach plan for Brief Name
-              <span style={{ color: "#294799" }}>
-                {selectedRecord.brief_name}
+              Attach plan for Brief Name:
+              <span style={{ color: "#294799", marginLeft: "13px" }}>
+                "{selectedRecord.brief_name}"
               </span>
             </>
           )}
@@ -180,7 +190,6 @@ const ApprovedBriefCmp = ({ navigate, dispatch }) => {
             background: "#294799",
             color: "white",
             border: "none",
-
             borderRadius: "10px",
             marginTop: "30px",
           }}

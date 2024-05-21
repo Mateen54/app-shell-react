@@ -5,7 +5,7 @@
 
 /* Header cells have a bottom border */
 .ant-table-thead > tr > th {
-  background-color: #c6cbfd; /* Adjust this color to match your header background color */
+  background-color: red; /* Adjust this color to match your header background color */
   color: #595959; /* Adjust this color to match your header text color */
   border-bottom: 2px solid #94a2f2; /* Adjust this color to match the image */
   border-top: 1px solid #94a2f2;
@@ -367,4 +367,15 @@
 
 .profile-container .ant-divider {
   margin: 16px 0;
+}
+
+:where(.css-dev-only-do-not-override-mzwlov).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > th,
+:where(.css-dev-only-do-not-override-mzwlov).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > td {
+  background: #f3f3ff !important;
 }

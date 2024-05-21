@@ -1,10 +1,6 @@
 import React from "react";
 import { Paper, Typography, Grid, Box } from "@mui/material";
 
-import Sidebar from "../Sidebar";
-
-import DashboardTable from "../DashboardTable";
-
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -53,9 +49,7 @@ const Dashboard = () => {
           </Grid>
         ))}
       </Grid>
-      <Box sx={{ mt: 3, px: 2 }}>
-        <DashboardTable />
-      </Box>
+      <Box sx={{ mt: 3, px: 2 }}></Box>
     </>
   );
 };

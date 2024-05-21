@@ -527,7 +527,7 @@ const UserManagement = () => {
                 Create User
               </Button>
               <Search
-                placeholder="search"
+                placeholder="Search"
                 onSearch={(value) => console.log(value)}
                 className="custom-search"
               />

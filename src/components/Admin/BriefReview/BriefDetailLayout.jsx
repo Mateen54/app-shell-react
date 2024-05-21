@@ -160,7 +160,6 @@ const BriefDetailLayout = ({
                   height: "40px",
                   fontFamily: "gothamBook",
                 }}
-                loading={loading}
               >
                 Reject Brief
               </Button>

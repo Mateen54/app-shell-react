@@ -14,12 +14,10 @@ const LostPlan = ({ navigate, dispatch }) => {
       <Row style={{ marginBottom: "10px" }} justify="space-between">
         <Col></Col>
         <Col>
-          <Select defaultValue="export" style={{ width: 120 }}>
-            <Option value="copy">Copy</Option>
+          <Select defaultValue="Export" style={{ width: 120 }}>
             <Option value="csv">CSV</Option>
             <Option value="excel">Excel</Option>
             <Option value="pdf">PDF</Option>
-            <Option value="print">Print</Option>
           </Select>
         </Col>
       </Row>

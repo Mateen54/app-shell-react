@@ -712,7 +712,6 @@ const ClientManagement = () => {
           <div className="steps-content">{stepComponents[currentStep]}</div>
         )}
       </Modal>
-
       <>
         <div>
           <Row>
