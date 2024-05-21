@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Typography } from "antd";
+import { Table, Typography, Row, Col } from "antd";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";

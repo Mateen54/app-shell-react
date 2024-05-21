@@ -91,9 +91,8 @@ const ApprovedBriefCmp = ({ navigate, dispatch }) => {
     try {
       setPlainLoading(true);
       const response = await axios.post(
-        `https://appsellapi.thecbt.live/api/upload-plan/admin-appsells/${selectedRecord.brief_id}`,
+        `https://appsellapi.thecbt.lives/api/upload-plan/admin-appsells/${selectedRecord.brief_id}`,
         formData,
-
         {
           headers: {
             "Content-Type": "multipart/form-data",
