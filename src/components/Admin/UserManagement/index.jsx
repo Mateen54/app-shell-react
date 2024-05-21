@@ -296,7 +296,7 @@ const UserManagement = () => {
         className="add-client-modal"
       >
         <h3 style={{ color: "#294799", fontSize: "20px" }}>
-          {editClicked ? "Edit User" : "Add User"}
+          {editClicked ? "Update User" : "Add User"}
         </h3>
         <Divider />
         {editClicked ? (

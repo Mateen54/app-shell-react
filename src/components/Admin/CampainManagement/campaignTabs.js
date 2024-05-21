@@ -12,7 +12,7 @@ const CampaignTabs = ({ tab, navigate, dispatch, response }) => {
           response={response}
         />
       )}
-      {tab === "completed" && "saS"}
+      {tab === "completed" && "coming soon"}
     </>
   );
 };

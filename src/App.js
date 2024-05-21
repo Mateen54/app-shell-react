@@ -1,29 +1,44 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Spin } from "antd";
 
-//csadasd
-//dsads
-import RequireAuth from "./routeAuth/RequireAuth";
-import ProtectedRoute from "./routeAuth/ProtectedRoute"; // Ensure this matches the exact filename
-import Sidebar from "./components/Admin/Sidebar";
-import Dashboard from "./components/Admin/Dashboard";
-import Login from "./components/Login";
-import BriefReview from "./components/Admin/BriefReview";
-import Signup from "./components/Signup";
-import UserManagement from "./components/Admin/UserManagement";
-import ClientManagement from "./components/Admin/ClientManagement";
-import TestingB from "./components/TestingB";
-import BreifDetailByFile from "./components/Admin/BriefReview/BreifDetailByFile";
-import BreifDetailByForm from "./components/Admin/BriefReview/BreifDetailByForm";
-import Plan from "./components/Admin/Plan";
-import PlanReview from "./components/Admin/Plan/PlanReview";
-import POReview from "./components/Admin/Plan/POReview";
-
-import CampaignManagement from "./components/Admin/CampainManagement";
-import CampaignDetails from "./components/Admin/CampainManagement/CampaignDetails";
-
-import ViewProfile from "./components/Admin/ClientManagement/ViewProfile";
+const RequireAuth = React.lazy(() => import("./routeAuth/RequireAuth"));
+const ProtectedRoute = React.lazy(() => import("./routeAuth/ProtectedRoute"));
+const Sidebar = React.lazy(() => import("./components/Admin/Sidebar"));
+const Dashboard = React.lazy(() => import("./components/Admin/Dashboard"));
+const Login = React.lazy(() => import("./components/Login"));
+const BriefReview = React.lazy(() => import("./components/Admin/BriefReview"));
+const Signup = React.lazy(() => import("./components/Signup"));
+const UserManagement = React.lazy(() =>
+  import("./components/Admin/UserManagement")
+);
+const ClientManagement = React.lazy(() =>
+  import("./components/Admin/ClientManagement")
+);
+const TestingB = React.lazy(() => import("./components/TestingB"));
+const BreifDetailByFile = React.lazy(() =>
+  import("./components/Admin/BriefReview/BreifDetailByFile")
+);
+const BreifDetailByForm = React.lazy(() =>
+  import("./components/Admin/BriefReview/BreifDetailByForm")
+);
+const Plan = React.lazy(() => import("./components/Admin/Plan"));
+const PlanReview = React.lazy(() =>
+  import("./components/Admin/Plan/PlanReview")
+);
+const POReview = React.lazy(() => import("./components/Admin/Plan/POReview"));
+const CampaignManagement = React.lazy(() =>
+  import("./components/Admin/CampainManagement")
+);
+const CampaignDetails = React.lazy(() =>
+  import("./components/Admin/CampainManagement/CampaignDetails")
+);
+const ViewProfile = React.lazy(() =>
+  import("./components/Admin/ClientManagement/ViewProfile")
+);
+const CompetitorReport = React.lazy(() =>
+  import("./components/CompetitorReport")
+);
 
 const CenteredLoader = () => (
   <div
@@ -39,6 +54,30 @@ const CenteredLoader = () => (
 );
 
 const App = () => {
+  const [resourcesLoaded, setResourcesLoaded] = useState(false);
+
+  useEffect(() => {
+    const checkResourcesLoaded = () => {
+      const allStyles = Array.from(document.styleSheets).every(
+        (styleSheet) => styleSheet.cssRules || styleSheet.rules
+      );
+      if (allStyles) {
+        setResourcesLoaded(true);
+      }
+    };
+
+    if (document.readyState === "complete") {
+      checkResourcesLoaded();
+    } else {
+      window.addEventListener("load", checkResourcesLoaded);
+      return () => window.removeEventListener("load", checkResourcesLoaded);
+    }
+  }, []);
+
+  if (!resourcesLoaded) {
+    return <CenteredLoader />;
+  }
+
   return (
     <Router>
       <Routes>
@@ -60,11 +99,13 @@ const App = () => {
         />
         <Route
           element={
-            <RequireAuth>
-              <ProtectedRoute allowedRoles={["planner", "editor", "admin"]}>
-                <Sidebar />
-              </ProtectedRoute>
-            </RequireAuth>
+            <Suspense fallback={<CenteredLoader />}>
+              <RequireAuth>
+                <ProtectedRoute allowedRoles={["planner", "editor", "admin"]}>
+                  <Sidebar />
+                </ProtectedRoute>
+              </RequireAuth>
+            </Suspense>
           }
         >
           <Route
@@ -175,7 +216,6 @@ const App = () => {
               </Suspense>
             }
           />
-
           <Route
             path="plan"
             element={
@@ -183,6 +223,18 @@ const App = () => {
                 <RequireAuth>
                   <ProtectedRoute allowedRoles={["admin", "planner"]}>
                     <Plan />
+                  </ProtectedRoute>
+                </RequireAuth>
+              </Suspense>
+            }
+          />
+          <Route
+            path="competitor-report"
+            element={
+              <Suspense fallback={<CenteredLoader />}>
+                <RequireAuth>
+                  <ProtectedRoute allowedRoles={["admin", "planner"]}>
+                    <CompetitorReport />
                   </ProtectedRoute>
                 </RequireAuth>
               </Suspense>

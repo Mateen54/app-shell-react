@@ -12,7 +12,7 @@ const NewBriefCmp = ({ navigate, dispatch }) => {
 
   useEffect(() => {
     dispatch(fetchAllBrief());
-  }, []);
+  }, [items]);
 
   return (
     <>

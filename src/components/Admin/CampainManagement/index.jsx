@@ -21,6 +21,8 @@ const CampaignManagement = () => {
     setActiveKey(key);
   };
 
+  const lengthOngoing = response?.fetchCampaign?.items?.length;
+
   return (
     <>
       <h1
@@ -98,7 +100,9 @@ const CampaignManagement = () => {
             tab={
               <span>
                 Ongoing Campaign
-                {activeKey === "1" && <span className="tab-count">4</span>}
+                {activeKey === "1" && (
+                  <span className="tab-count">{lengthOngoing}</span>
+                )}
               </span>
             }
             key="1"
@@ -114,7 +118,7 @@ const CampaignManagement = () => {
             tab={
               <span>
                 Completed Campaign
-                {activeKey === "2" && <span className="tab-count">4</span>}
+                {/* {activeKey === "2" && <span className="tab-count">0</span>} */}
               </span>
             }
             key="2"

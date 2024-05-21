@@ -116,7 +116,8 @@
   .ant-pagination-item-active
   a {
   color: white;
-  background: #294799;
+  background: #294799 !important;
+  border-radius: 5px;
 }
 
 :where(.css-dev-only-do-not-override-mzwlov).ant-pagination
@@ -136,4 +137,15 @@
   border-radius: 6px;
   background: white;
   border: 1px solid #294799 !important;
+}
+
+:where(.css-dev-only-do-not-override-mzwlov) a {
+  color: #1677ff;
+  text-decoration: none;
+  background-color: lightgray !important;
+  outline: none;
+  cursor: pointer;
+  transition: color 0.3s;
+  -webkit-text-decoration-skip: objects;
+  border-radius: 5px;
 }

@@ -91,7 +91,7 @@ const ApprovedBriefCmp = ({ navigate, dispatch }) => {
     try {
       setPlainLoading(true);
       const response = await axios.post(
-        `https://appsellapi.thecbt.lives/api/upload-plan/admin-appsells/${selectedRecord.brief_id}`,
+        `https://appsellapi.thecbt.live/api/upload-plan/admin-appsells/${selectedRecord.brief_id}`,
         formData,
         {
           headers: {
@@ -223,7 +223,7 @@ const ApprovedBriefCmp = ({ navigate, dispatch }) => {
             ...paginationConfig,
             position: ["bottomLeft", "bottomRight"],
           }}
-          scroll={{ y: tableHeight - 200 }} // Adjust based on your layout
+          // scroll={{ y: tableHeight - 200 }} // Adjust based on your layout
           className="custom-pagination"
         />
       )}

@@ -168,6 +168,7 @@ const UpdatedClient = ({ data }) => {
           ]}
         >
           <Input
+            disabled
             readOnly
             style={{ cursor: "pointer" }}
             placeholder="e.g. example@example.com"

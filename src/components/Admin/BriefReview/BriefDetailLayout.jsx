@@ -1,6 +1,7 @@
-import React from "react";
-import { Row, Col, Button, Modal, Typography, Input } from "antd";
+import React, { useState } from "react";
+import { Row, Col, Button, Modal, Typography, Input, Spin } from "antd";
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import { useSelector } from "react-redux";
 
 const { Title, Paragraph } = Typography;
 const { TextArea } = Input;
@@ -19,6 +20,21 @@ const BriefDetailLayout = ({
   children,
   MyDocument, // Add MyDocument to props
 }) => {
+  const [loading, setLoading] = useState(false);
+
+  const rejectRes = useSelector((res) => res.rejectBrief);
+
+  const handleApprove = async () => {
+    setLoading(true);
+    setTimeout(() => {
+      approveBrief();
+    }, 0);
+  };
+
+  const handleReject = async () => {
+    showModal();
+  };
+
   return (
     <>
       <Modal
@@ -56,10 +72,10 @@ const BriefDetailLayout = ({
                 background: "#294799",
                 color: "white",
                 border: "none",
-
                 borderRadius: "10px",
               }}
               onClick={handleAddReason}
+              loading={rejectRes.loading}
             >
               Add Reason
             </Button>
@@ -135,7 +151,7 @@ const BriefDetailLayout = ({
           {brief.status !== "approved" && (
             <Col>
               <Button
-                onClick={showModal}
+                onClick={handleReject}
                 style={{
                   marginRight: "10px",
                   border: "1px solid #FF3B30",
@@ -144,11 +160,12 @@ const BriefDetailLayout = ({
                   height: "40px",
                   fontFamily: "gothamBook",
                 }}
+                loading={loading}
               >
                 Reject Brief
               </Button>
               <Button
-                onClick={approveBrief}
+                onClick={handleApprove}
                 style={{
                   background: "#294799",
                   color: "white",
@@ -156,6 +173,7 @@ const BriefDetailLayout = ({
                   height: "40px",
                   fontFamily: "gothamBook",
                 }}
+                loading={loading}
               >
                 Approve
               </Button>

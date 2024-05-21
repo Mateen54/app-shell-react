@@ -73,7 +73,7 @@ const ApprovedPlan = ({ navigate, dispatch }) => {
       <Menu.Item key="2" onClick={() => viewDetailsPO(record)}>
         View PO
       </Menu.Item>
-      <Menu.Item key="3">Delete</Menu.Item>
+      {/* <Menu.Item key="3">Delete</Menu.Item> */}
     </Menu>
   );
 

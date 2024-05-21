@@ -11,12 +11,6 @@ export const getColumns = (dispatch, navigate) => [
     render: (text) => text || "-",
   },
   {
-    title: "Brief Name",
-    dataIndex: "",
-    key: "briefName",
-    render: (text) => text || "-",
-  },
-  {
     title: "Upload Date",
     dataIndex: ["plan", "createdAt"],
     key: "uploadDate",
@@ -40,7 +34,7 @@ export const getColumns = (dispatch, navigate) => [
   },
   {
     title: "reason",
-    dataIndex: "reason",
+    dataIndex: ["plan", "reason"],
     key: "reason",
     render: (text) => text || "-",
   },

@@ -207,7 +207,7 @@ const EditUser = ({ data }) => {
               loading={isSubmitting || editUserRes.loading}
               disabled={isSubmitting}
             >
-              Edit User
+              Update User
             </Button>
           </Form.Item>
         </Form>
